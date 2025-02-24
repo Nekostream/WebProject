@@ -6,7 +6,12 @@
 package dao;
 
 import dto.BookDTO;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
+import utils.DBUtils;
 
 /**
  *
@@ -14,36 +19,74 @@ import java.util.List;
  */
 public class BookDAO implements IDAO<BookDTO,String> {
 
-    @Override
+     @Override
     public boolean create(BookDTO entity) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override
     public List<BookDTO> readAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
     public BookDTO readbyID(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
     public boolean update(BookDTO entity) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override
     public boolean delete(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override
     public List<BookDTO> search(String searchTerm) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
-
+    
+    public List<BookDTO> searchByTitle(String searchTerm) {
+        List<BookDTO> result = new ArrayList<>();
+        String sql = "SELECT * FROM tblBooks WHERE title LIKE ? AND Quantity >0";
+        
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, "%"+searchTerm+"%");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                BookDTO b = new BookDTO(
+                        rs.getString("BookID"),
+                        rs.getString("Title"),
+                        rs.getString("Author"),
+                        rs.getInt("PublishYear"),
+                        rs.getDouble("Price"),
+                        rs.getInt("Quantity")
+                );
+                result.add(b);
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return result;
+    }
+ public boolean updateQuantityToZero(String str_bookid){
+     String sql = "update tblBooks set Quantity = 0 where BookID=?";
+     try{
+         Connection con = DBUtils.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql);
+         ps.setString(1, str_bookid);
+         int i = ps.executeUpdate();
+         return i > 0;
+     }catch(Exception ex){
+         System.out.println(ex.toString());
+     }
+     return false;
+ }
     
     
 }

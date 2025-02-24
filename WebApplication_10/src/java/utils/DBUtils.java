@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * @author tungi
  */
 public class DBUtils implements Serializable{
-    private static final String DB_NAME = "prj301_1814_06";
+    private static final String DB_NAME = "prj301_se1814_slot8";
     private static final String DB_USERNAME = "sa";
     private static final String DB_PASSWORD = "12345";
     
